@@ -20,6 +20,44 @@ A Docker-based media server stack with secure secrets management.
 
 This project uses encrypted secrets for secure configuration. You'll need a password to encrypt/decrypt the secrets file.
 
+### Path Configuration
+Before starting the stack, you need to configure the correct paths in `docker-compose.yml`. Update the following volume mappings according to your system:
+
+```yaml
+# VPN Service
+- /path/to/gluetun/config:/gluetun      # VPN configuration directory
+
+# Transmission
+- /path/to/transmission/config:/config   # Transmission settings
+- /path/to/downloads:/downloads          # Download directory
+- /path/to/watch:/watch                  # Watch directory for auto-downloads
+
+# Media Libraries
+- /path/to/movies:/movies                # Movies library
+- /path/to/tv:/tv                        # TV Shows library
+- /path/to/books:/books                  # Books library
+- /path/to/media:/media                  # Combined media library for Jellyfin
+
+# Application Configs
+- /path/to/jackett/config:/config        # Jackett configuration
+- /path/to/radarr/config:/config         # Radarr configuration
+- /path/to/sonarr/config:/config         # Sonarr configuration
+- /path/to/readarr/config:/config        # Readarr configuration
+- /path/to/jellyfin/config:/config       # Jellyfin configuration
+```
+
+Example configuration for a typical setup:
+```yaml
+- /home/user/mediaserver/config/gluetun:/gluetun
+- /home/user/mediaserver/config/transmission:/config
+- /home/user/mediaserver/downloads:/downloads
+- /home/user/mediaserver/watch:/watch
+- /home/user/mediaserver/movies:/movies
+- /home/user/mediaserver/tv:/tv
+- /home/user/mediaserver/books:/books
+- /home/user/mediaserver/media:/media
+```
+
 ### Managing Secrets
 - **Encrypt secrets:**
   ```bash
