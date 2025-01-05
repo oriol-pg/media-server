@@ -1,0 +1,123 @@
+name: media_server
+
+services:
+  vpn:
+    image: qmcgaw/gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      - VPN_SERVICE_PROVIDER=protonvpn
+      - OPENVPN_USER=${VPN_USER}
+      - OPENVPN_PASSWORD=${VPN_PASSWORD}
+      - SERVER_COUNTRIES=${VPN_COUNTRIES}
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Madrid
+    ports:
+      - 8112:8112
+      - 6881:6881
+      - 6881:6881/udp
+      - 9117:9117
+    volumes:
+      - /path/to/gluetun/config:/gluetun
+    restart: unless-stopped
+
+  transmission:
+    image: linuxserver/transmission:latest
+    depends_on:
+      - vpn
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Madrid
+    volumes:
+      - /path/to/transmission/config:/config
+      - /path/to/downloads:/downloads
+      - /path/to/watch:/watch
+    network_mode: service:vpn
+    restart: unless-stopped
+
+  jackett:
+    image: linuxserver/jackett:latest
+    depends_on:
+      - vpn
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Madrid
+    volumes:
+      - /path/to/jackett/config:/config
+      - /path/to/downloads:/downloads
+    network_mode: service:vpn
+    restart: unless-stopped
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:develop
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Madrid
+    volumes:
+      - /path/to/radarr/config:/config
+      - /path/to/movies:/movies
+      - /path/to/downloads:/downloads
+    ports:
+      - 7878:7878
+    restart: unless-stopped
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:develop
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Madrid
+    volumes:
+      - /path/to/sonarr/config:/config
+      - /path/to/tv:/tv
+      - /path/to/downloads:/downloads
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+
+  readarr:
+    image: lscr.io/linuxserver/readarr:develop
+    container_name: readarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Madrid
+    volumes:
+      - /path/to/readarr/config:/config
+      - /path/to/books:/books
+      - /path/to/downloads:/downloads
+    ports:
+      - 8787:8787
+    restart: unless-stopped
+
+  jellyfin:
+    image: linuxserver/jellyfin:latest
+    container_name: jellyfin
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Madrid
+    volumes:
+      - /path/to/jellyfin/config:/config
+      - /path/to/media:/media
+    ports:
+      - 8096:8096
+      - 8920:8920
+    restart: unless-stopped
+
+volumes:
+  gluetun-config:
+  transmission-config:
+  jackett-config:
+  radarr-config:
+  sonarr-config:
+  readarr-config:
+  jellyfin-config:

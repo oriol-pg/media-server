@@ -1,0 +1,16 @@
+# Secrets and configuration
+config/secrets.json
+.env
+
+# Temporary files
+*.tmp
+.DS_Store
+
+# Logs
+*.log
+
+.vscode
+
+# Keep encrypted files
+!config/secrets.json.gpg
+!config/secrets.json.sha256
