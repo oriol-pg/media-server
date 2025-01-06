@@ -20,6 +20,8 @@ services:
       - 6881:6881
       - 6881:6881/udp
       - 9117:9117
+    env_file:
+      - .env
     volumes:
       - /path/to/gluetun/config:/gluetun
     restart: unless-stopped
@@ -111,6 +113,18 @@ services:
     ports:
       - 8096:8096
       - 8920:8920
+    restart: unless-stopped
+  organizr:
+    image: organizr/organizr:latest
+    container_name: organizr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Madrid
+    volumes:
+      - /path/to/organizr/config:/config
+    ports:
+      - 9008:80
     restart: unless-stopped
 
 volumes:

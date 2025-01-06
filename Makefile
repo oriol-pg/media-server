@@ -31,7 +31,7 @@ first-start: decrypt ## Start the media stack (requires PASSWORD=)
 	@docker-compose up -d
 	@echo "$(GREEN)Media stack started successfully!$(NC)"
 
-start: decrypt ## Start the media stack (once secrets are decrypted)
+start: 
 	@docker-compose up -d
 	@echo "$(GREEN)Media stack started successfully!$(NC)"
 
